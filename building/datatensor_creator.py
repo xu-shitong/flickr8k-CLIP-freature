@@ -50,6 +50,37 @@ X_0_PREDICTION = True # if model predicts x_0 or x_{t-1}
 clip_processor = CLIPProcessor.from_pretrained("./tokenizers/openai/clip-vit-base-patch32-local")
 clip = CLIP.from_pretrained("./models/openai/clip-vit-base-patch32-local")
 
+# # OLD dataloader, slow load from origin data
+# class Flickr8kCLIPDataset(torch.utils.data.Dataset):
+#   def __init__(self, dir, clip_processor, clip) -> None:
+#     self.dir = dir
+#     self.caption = pd.read_csv(f"{dir}/captions.txt")
+
+#     self.clip = clip
+#     self.clip_processor = clip_processor
+
+#   def collate_fn(self, batch):
+#     images = []
+#     captions = []
+#     for b in batch:
+#       images.append(Image.open(f"{self.dir}/images/{b['image']}"))
+#       captions.append(b["caption"])
+
+#     inputs = self.clip_processor(text=captions, images=images, return_tensors="pt", padding=True)
+#     outputs = self.clip(**inputs)
+
+#     return outputs.text_embeds, outputs.image_embeds
+
+#   def __len__(self):
+#     return len(self.caption)
+
+#   def __getitem__(self, idx):
+#     return self.caption.loc[idx]
+
+# # try on load on request in colect func
+# train_dataset_base = Flickr8kCLIPDataset("flickr8k/", clip_processor, clip)
+# train_loader_base = DataLoader(train_dataset_base, shuffle=False, batch_size=BATCH_SIZE, collate_fn=train_dataset_base.collate_fn)
+
 class Flickr8kCLIPDataset(torch.utils.data.Dataset):
   def __init__(self, dir, clip_processor, clip) -> None:
     self.dir = dir
