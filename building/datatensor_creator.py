@@ -114,7 +114,7 @@ end = len(train_dataset)
 # print(f"start loading on cnt = {sys.argv[1]}")
 with tqdm.tqdm(range(start, end)) as process:
   for i in process:
-    image, text = train_dataset[i]
+    text, image = train_dataset[i]
     image_all = torch.vstack([image_all, image])
     text_all = torch.vstack([text_all, text])
 
